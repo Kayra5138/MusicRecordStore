@@ -1,6 +1,6 @@
 Genel Bilgiler
 
-Site basitçe bir e-ticaret sitesi. Ürünler veri tabanında tutuluyor. Ana sayfa, arama sayfası, ürün detay sayfası ve sepet sayfası olmak üzere 4 sayfa bulunuyor. Veri tabanı olarak ise Firebase kullanılıyor. Her şeyi sıfırdan yapmak istedim ve hazır bir veri tabanı kullanmadım. Dolayısıyla sınırlı sayıda ürün (plak) bulunuyor. Sitenin her sayfasında bulunan “layout” 2 kısımdan oluşuyor. Başlık kısmında solda sitenin ana sayfasına yönlendirme yapan bir buton, ortada arama sayfasına yönlendiren bir arama çubuğu ve sağda sepet sayfasına yönlendirme yapan sepet ikonu bulunuyor.
+Bir e-ticaret sitesi tasarladım. Ürünler veri tabanında tutuluyor. Ana sayfa, arama sayfası, ürün detay sayfası ve sepet sayfası olmak üzere 4 sayfa bulunuyor. Veri tabanı olarak ise Firebase kullanılıyor. Her şeyi sıfırdan yapmak istedim ve hazır bir veri tabanı kullanmadım. Dolayısıyla sınırlı sayıda ürün (plak) bulunuyor. Sitenin her sayfasında bulunan “layout” 2 kısımdan oluşuyor. Başlık kısmında solda sitenin ana sayfasına yönlendirme yapan bir buton, ortada arama sayfasına yönlendiren bir arama çubuğu ve sağda sepet sayfasına yönlendirme yapan sepet ikonu bulunuyor.
 
 
 Ana Sayfa
