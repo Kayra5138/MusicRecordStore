@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MusicRecordStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MusicRecordStore.styles.css" asp-append-version="true" />
+
+    <style>
+        header {
+            background-color: #58ccab;
+            color: white;
+            padding: 10px 0;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+        }
+
+        footer {
+            background-color: #58ccab;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+
+        .shopping-cart-icon {
+            position: center;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div style="text-align: center; width: 20%;">
+            <a class="nav-link text-dark" asp-area="" asp-page="/Index">
+                <span style="font-size: 1.5rem; font-weight: bold; color: white;">MusicRecordStore</span>
+            </a>
+        </div>
+
+        <div class="search-box" style="width: 60%; align-items: center;">
+            <input type="text" id="searchInput" class="form-control search-input" style="width: 40%;" placeholder="Search by artist/album/genre">
+            <span class="bi bi-search" style="font-size: 1.5rem;" onclick="search()"></span>
+        </div>
+
+        <div style="width: 20%;">
+            <a class="nav-link text-dark" asp-area="" asp-page="/Cart">
+                <img src="~/icons/cart.png" alt="xd" class="shopping-cart-icon">
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container" style="color: white;">
+            &copy; 2023 - MusicRecordStore
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function search() {
+            var searchTerm = $("#searchInput").val();
+
+            // İsterseniz burada bir şey yapabilir veya doğrudan yönlendirebilirsiniz.
+            window.location.href = "/Search?query=" + replaceTurkishCharacters(searchTerm);
+        }
+
+        // Enter tuşuna basıldığında search fonksiyonunu çağır.
+        $("#searchInput").keypress(function (e) {
+            if (e.which === 13) { // Enter tuşu
+                search();
+            }
+        });
+
+        function replaceTurkishCharacters(inputString) {
+            var turkishChars = {
+                'ı': 'i',
+                'İ': 'I',
+                'ü': 'u',
+                'Ü': 'U',
+                'ö': 'o',
+                'Ö': 'O',
+                'ş': 's',
+                'Ş': 'S',
+                'ç': 'c',
+                'Ç': 'C',
+                'ğ': 'g',
+                'Ğ': 'G'
+            };
+
+            var result = inputString.replace(/[ıİüÜöÖşŞçÇğĞ]/g, function (match) {
+                return turkishChars[match];
+            });
+
+            return result;
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

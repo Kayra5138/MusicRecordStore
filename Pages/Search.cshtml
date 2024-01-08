@@ -1,0 +1,155 @@
+﻿@page
+@model SearchModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .product-link {
+        text-decoration: none;
+        color: black;
+    }
+
+    .product {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+        .product .product-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .product .product-image {
+            max-width: 200px; 
+            margin-right: 10px; 
+        }
+
+    .product-info {
+        flex-grow: 1;
+    }
+</style>
+
+<div class="container" id="container">
+
+    @if (Model.Products != null && Model.Products.Any())
+    {
+        <h2 class="header">Search results for "@Model.Query"</h2>
+
+        <form method="get" asp-page="Index" onsubmit="sortProducts(); return false;">
+            <label for="sortBy">Sort by:</label>
+            <select name="sortBy" id="sortBy">
+                <option value="Artist">Artist</option>
+                <option value="Name">Name</option>
+                <option value="Price">Price</option>
+                <option value="Rating">Rating</option>
+                <option value="Reviews">Reviews</option>
+            </select>
+
+            <label for="sortOrder">Sort order:</label>
+            <select name="sortOrder" id="sortOrder">
+                <option value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+            </select>
+
+            <button type="submit">Sort</button>
+        </form>
+
+        <div id="productList">
+            @foreach (var product in Model.Products)
+            {
+                if (product != null)
+                {
+                    <a href="/Record/@product.Id" class="product-link">
+                        <div class="product">
+                            <div class="product-details">
+                                <img src="@product.ImageURL" alt="Product Image" class="product-image">
+                                <div class="product-info">
+                                    <h3>@product.Name</h3>
+                                    <p>Artist: @product.Artist</p>
+                                    <p>Price: @product.Price</p>
+                                    <p>Rating: @product.Rating</p>
+                                    <p>Reviews: @product.Reviews</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <p class="header">No records matching your search was found.</p>
+    }
+</div>
+
+
+<script>
+    function sortProducts() {
+        var sortBy = document.getElementById("sortBy").value;
+        var sortOrder = document.getElementById("sortOrder").value;
+        localStorage.setItem('sortBy', sortBy);
+        localStorage.setItem('sortOrder', sortOrder);
+        var url = encodeURI("/Search?query=" + replaceTurkishCharacters("@Model.Query") + "&sortBy=" + sortBy + "&sortOrder=" + sortOrder);
+        window.location.href = url;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var storedSortBy = localStorage.getItem('sortBy');
+        var storedSortOrder = localStorage.getItem('sortOrder');
+        if (storedSortBy && storedSortOrder && window.location.href.includes('sortBy') && window.location.href.includes('sortOrder')) {
+            document.getElementById('sortBy').value = storedSortBy;
+            document.getElementById('sortOrder').value = storedSortOrder;
+        }
+    });
+
+    function replaceTurkishCharacters(inputString) {
+        var turkishChars = {
+            'ı': 'i',
+            'İ': 'I',
+            'ü': 'u',
+            'Ü': 'U',
+            'ö': 'o',
+            'Ö': 'O',
+            'ş': 's',
+            'Ş': 'S',
+            'ç': 'c',
+            'Ç': 'C',
+            'ğ': 'g',
+            'Ğ': 'G'
+        };
+
+        var result = inputString.replace(/[ıİüÜöÖşŞçÇğĞ]/g, function (match) {
+            return turkishChars[match];
+        });
+
+        return result;
+    }
+</script>

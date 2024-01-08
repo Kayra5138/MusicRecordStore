@@ -1,0 +1,110 @@
+﻿@page
+@model CartModel
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .product-link {
+        text-decoration: none;
+        color: black;
+    }
+
+    .product {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+        .product .product-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .product .product-image {
+            max-width: 200px;
+            margin-right: 10px;
+        }
+
+    .product-info {
+        flex-grow: 1;
+    }
+
+    .sidebar {
+        flex-basis: 30%;
+
+    .total-price-box {
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .total-price-value {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+
+@{
+    decimal totalPrice = 0;
+}
+
+<div class="container">
+    <div class="header">Your Cart</div>
+    
+    @foreach (var product in Model.Products)
+    {
+        if (product != null)
+        {
+            totalPrice = totalPrice + product.Price;
+            <a href="/Record/@product.Id" class="product-link">
+                <div class="product">
+                    <div class="product-details">
+                        <img src="@product.ImageURL" alt="Product Image" class="product-image">
+                        <div class="product-info">
+                            <h3>@product.Name</h3>
+                            <p>Artist: @product.Artist</p>
+                            <p>Price: @product.Price</p>
+                            <p>Rating: @product.Rating</p>
+                            <p>Reviews: @product.Reviews</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    }
+</div>
+
+<div class="sidebar">
+    <div class="total-price-box">
+        <h4>Total Price</h4>
+        <div id="totalPrice" class="total-price-value">@totalPrice</div>
+    </div>
+</div>

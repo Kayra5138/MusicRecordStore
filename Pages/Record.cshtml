@@ -1,0 +1,166 @@
+@page "{id:int}"
+@model RecordModel
+@{
+    ViewData["Title"] = "Ürün Detaylarý";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .outbox {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .spacer {
+        flex-grow: 1;
+        flex-basis: 15%;
+    }
+
+    .product {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .product-image {
+        width: 100%;
+        max-height: 400px;
+        margin-right: 20px;
+        flex-basis: 50%;
+    }
+
+    .product-info {
+        flex-grow: 1;
+        flex-basis: 35%;
+    }
+
+        .product-info h3 {
+            margin: 10px 0;
+            font-size: 24px; /* Büyük ve kalýn font */
+            font-weight: bold;
+        }
+
+        .product-info p {
+            margin: 10px 0; /* Yazýlarýn boyutunu arttýrmak için margin deðerleri güncellendi */
+            font-size: 18px; /* Yazý boyutu arttýrýldý */
+        }
+
+    .product-details {
+        text-align: left;
+        flex-basis: 35%;
+    }
+
+        .product-details h4 {
+            margin: 10px 0; /* Boþluðu azaltmak için margin deðeri düþürüldü */
+            font-size: 24px; /* Büyük ve kalýn font */
+            font-weight: bold;
+        }
+
+        .product-details pre {
+            font-family: Arial, sans-serif; /* Farklý font kullanýmý */
+            font-size: 18px; /* Yazý boyutu arttýrýldý */
+        }
+
+    .addToCartButton {
+        background-color: #58ccab;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
+
+<div class="outbox">
+    <div class="product">
+        <div class="product-image">
+            <img src="@Model.ProductDetail.ImageURL" alt="Product Image" class="product-image">
+        </div>
+        <div class="product-info">
+            <h3>@Model.ProductDetail.Name</h3>
+            <p>Artist: @Model.ProductDetail.Artist</p>
+            <p>Price: @Model.ProductDetail.Price</p>
+            <p>Rating: @Model.ProductDetail.Rating</p>
+            <p>Reviews: @Model.ProductDetail.Reviews</p>
+            <button class="addToCartButton" id="addToCartButton" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<div class="outbox">
+    <div class="product-details">
+        <h4>Details</h4>
+        <pre>@Model.ProductDetail.Details</pre>
+    </div>
+</div>
+
+@{
+    var productId = Model.ProductDetail.Id.ToString();
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        checkCartStatus();
+        console.log("session cart falan: "+"@HttpContext.Session.GetString("cart")");
+    });
+
+    var cartItems = '@HttpContext.Session.GetString("cart")' || '-';
+
+    function addToCart() {
+        var productId = '@productId';
+        if (cartItems.includes(productId)) {
+            cartItems = cartItems.replace(productId + ",", "");
+            $.ajax({
+                url: "/Record/"+productId+"?handler=Cart",
+                type: "GET",
+                dataType: "json",
+                data: { cartItems: cartItems },
+                success: function (data) {
+                    cartItems = data;
+                    checkCartStatus();
+                },
+                error: function (error) {
+                    console.error("Hata oluþtu: ", error);
+                }
+            });
+        } else
+        {
+            cartItems = cartItems + productId + ",";
+            $.ajax({
+                url: "/Record/" + productId + "?handler=Cart",
+                type: "GET",
+                dataType: "json",
+                data: { cartItems: cartItems },
+                success: function (data) {
+                    cartItems = data;
+                    checkCartStatus();
+                },
+                error: function (error) {
+                    console.error("Hata oluþtu: ", error);
+                }
+            });
+        }
+    }
+
+    function checkCartStatus() {
+        var productId = '@productId';
+        var addToCartButton = document.getElementById('addToCartButton');
+        if (cartItems.includes(productId)) {
+            console.log(cartItems)
+            addToCartButton.innerText = 'Remove from Cart';
+            addToCartButton.style.backgroundColor = '#FF6347';
+            return true;
+        } else {
+            addToCartButton.innerText = 'Add to Cart';
+            addToCartButton.style.backgroundColor = '#58ccab';
+            return false;
+        }
+    }
+</script>
